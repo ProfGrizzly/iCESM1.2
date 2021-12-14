@@ -798,41 +798,73 @@ CONTAINS
 
           do j = 1, wtrc_nsrfvap
             select case(wtrc_species(wtrc_iasrfvap(j)))
+
               case (isph2o)
-                if(j .eq. 1) then !H2O tracer?
-                  cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = -x2a_a%rAttr(index_x2a_Faxx_evap,ig) 
-                else !water tag?
-                  if( -x2a_a%rAttr(index_x2a_Faxx_evap,ig) .lt. 0._r8) then !dew/frost?
+                cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = -x2a_a%rAttr(index_x2a_Faxx_evap,ig) 
+
+              case (isph216o)
+                if(j .eq. 2) then 
+                  cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = -x2a_a%rAttr(index_x2a_Faxx_evap_16O,ig)
+                else !water tag
+                  if( -x2a_a%rAttr(index_x2a_Faxx_evap_16O,ig) .lt. 0._r8) then !dew/frost?
                     !calculate surface vapor ratio:
                      R = wtrc_ratio(wtrc_species(wtrc_iasrfvap(j)),cam_out(c)%qbot(i,wtrc_indices(wtrc_iasrfvap(j))),&
                                     cam_out(c)%qbot(i,wtrc_indices(wtrc_iasrfvap(1))))
-                      cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = R*-x2a_a%rAttr(index_x2a_Faxx_evap,ig)
-                  else
-                    if(j .eq. 5) then    
-                   !All Land:
-                      cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) =  cam_in(c)%landfrac(i)*-x2a_a%rAttr(index_x2a_Faxx_evap,ig)
-                    else if(j .eq. 6) then  
-                   !North Pacific:
-                      if((wtlat > 30._r8) .and. (wtlat < 60._r8)) then
-                        if((wtlon > 30._r8) .and. (wtlon <= 250._r8)) then
-                         !NOTE:  Could also use ocnfrac here if you wanted no sea-ice fluxes.
-                          cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = (1._r8-cam_in(c)%landfrac(i))*-x2a_a%rAttr(index_x2a_Faxx_evap,ig)
-                        else
-                          cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = 0._r8
-                        end if
-                      else
-                        cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = 0._r8
-                      end if
-                    !NOTE:  If you have more water tags, you would put them here!
-                    end if !water tracers
+                      cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = R*-x2a_a%rAttr(index_x2a_Faxx_evap_16O,ig) 
+	        else 
+ 		     if(j .eq. 5) then 
+  	             !LND:
+                             if(((wtlat > -90._r8) .and. (wtlat < 90._r8)) .and. ((wtlon > 0._r8) .and. (wtlon <= 360._r8))) then 
+     				cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = cam_in(c)%landfrac(i)*-x2a_a%rAttr(index_x2a_Faxx_evap_16O,ig) 
+   	              else
+					cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = 0._r8
+		              end if 
+		     end if 
+ 		     if(j .eq. 6) then 
+  	             !NPAC:
+                             if(((wtlat > 30._r8) .and. (wtlat < 60._r8)) .and. ((wtlon > 120._r8) .and. (wtlon <= 250._r8))) then 
+		     			cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = (1._r8-cam_in(c)%landfrac(i))*-x2a_a%rAttr(index_x2a_Faxx_evap_16O,ig) 
+   	              else
+					cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = 0._r8
+		              end if 
+		     end if 
+
                   end if   !dew/frost
-                end if     !H2O tracer
-              case (isph216o)
-                cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = -x2a_a%rAttr(index_x2a_Faxx_evap_16O,ig)
+                end if     !H2O tracer 
+
               case (isphdo)
-                cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = -x2a_a%rAttr(index_x2a_Faxx_evap_HDO,ig)
+                cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = -x2a_a%rAttr(index_x2a_Faxx_evap_HDO,ig) 
+
               case (isph218o)
-                cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = -x2a_a%rAttr(index_x2a_Faxx_evap_18O,ig)
+                if(j .eq. 4) then 
+                  cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = -x2a_a%rAttr(index_x2a_Faxx_evap_18O,ig)
+                else !water tag
+                  if( -x2a_a%rAttr(index_x2a_Faxx_evap_18O,ig) .lt. 0._r8) then !dew/frost?
+                    !calculate surface vapor ratio:
+                     R = wtrc_ratio(wtrc_species(wtrc_iasrfvap(j)),cam_out(c)%qbot(i,wtrc_indices(wtrc_iasrfvap(j))),&
+                                    cam_out(c)%qbot(i,wtrc_indices(wtrc_iasrfvap(1))))
+                      cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = R*-x2a_a%rAttr(index_x2a_Faxx_evap_18O,ig) 
+	        else 
+ 		     if(j .eq. 7) then 
+  	             !LND:
+                             if(((wtlat > -90._r8) .and. (wtlat < 90._r8)) .and. ((wtlon > 0._r8) .and. (wtlon <= 360._r8))) then 
+     				cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = cam_in(c)%landfrac(i)*-x2a_a%rAttr(index_x2a_Faxx_evap_18O,ig) 
+   	              else
+					cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = 0._r8
+		              end if 
+		     end if 
+ 		     if(j .eq. 8) then 
+  	             !NPAC:
+                             if(((wtlat > 30._r8) .and. (wtlat < 60._r8)) .and. ((wtlon > 120._r8) .and. (wtlon <= 250._r8))) then 
+		     			cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = (1._r8-cam_in(c)%landfrac(i))*-x2a_a%rAttr(index_x2a_Faxx_evap_18O,ig) 
+   	              else
+					cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = 0._r8
+		              end if 
+		     end if 
+
+                  end if   !dew/frost
+                end if     !H2O tracer 
+		! water tag goes here
             end select
           end do
 

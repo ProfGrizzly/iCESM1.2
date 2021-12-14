@@ -1,26 +1,37 @@
-! Users should add all user specific namelist changes below in the form of 
-! namelist_var = new_namelist_value 
- 
-!Boundary conditions (needed to simulate 2013 and beyond):
-
- bndtvghg               = '/glade/p/cesmdata/cseg/inputdata/atm/cam/ggas/ghg_rcp45_1765-2500_c100405.nc'
-
-
-!Water tags:
- wtrc_names             = 'H2OV', 'H2OL', 'H2OI', 'H2OR', 'H2OS', 'H2Or', 'H2Os', 'H216OV', 'H216OL', 'H216OI','H216OR','H216OS','H216Or',
-   'H216Os','HDOV','HDOL', 'HDOI', 'HDOR', 'HDOS', 'HDOr', 'HDOs', 'H218OV', 'H218OL', 'H218OI', 'H218OR', 'H218OS', 'H218Or', 'H218Os',
-   'LNDV', 'LNDL', 'LNDI', 'LNDR', 'LNDS', 'LNDr', 'LNDs', 'NPACV', 'NPACL', 'NPACI', 'NPACR', 'NPACS', 'NPACr', 'NPACs'
-
- wtrc_species_names             = 'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H216O', 'H216O', 'H216O', 'H216O', 'H216O', 'H216O',
-    'H216O', 'HD16O', 'HD16O', 'HD16O', 'HD16O', 'HD16O', 'HD16O', 'HD16O', 'H218O', 'H218O', 'H218O', 'H218O', 'H218O', 'H218O', 'H218O',
-    'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O'
-
- wtrc_srfpcp_names              = 'H2OR', 'H2Or', 'H2OS', 'H2Os', 'H216OR', 'H216OS', 'H216Or', 'H216Os', 'HDOR', 'HDOr', 'HDOS', 'HDOs',
-    'H218OR', 'H218Or', 'H218OS', 'H218Os', 'LNDR', 'LNDS', 'LNDr', 'LNDs', 'NPACR', 'NPACS', 'NPACr', 'NPACs'
-
- wtrc_srfvap_names              = 'H2OV', 'H216OV', 'HDOV','H218OV', 'LNDV', 'NPACV'
-
- wtrc_type_names                = 'VAPOR', 'LIQUID', 'ICE', 'RAINS', 'SNOWS', 'RAINC', 'SNOWC', 'VAPOR', 'LIQUID', 'ICE', 'RAINS', 'SNOWS',
-  'RAINC', 'SNOWC', 'VAPOR', 'LIQUID', 'ICE', 'RAINS', 'SNOWS', 'RAINC', 'SNOWC', 'VAPOR', 'LIQUID', 'ICE', 'RAINS', 'SNOWS', 'RAINC', 'SNOWC',
-  'VAPOR', 'LIQUID', 'ICE', 'RAINS', 'SNOWS', 'RAINC', 'SNOWC', 'VAPOR', 'LIQUID', 'ICE', 'RAINS', 'SNOWS', 'RAINC', 'SNOWC'
-
+wtrc_names             = 'H2OV', 'H2OL', 'H2OI', 'H2OR', 'H2OS', 'H2Or', 'H2Os',
+                          'H216OV', 'H216OL', 'H216OI','H216OR','H216OS','H216Or', 'H216Os',
+                          'HDOV','HDOL', 'HDOI', 'HDOR', 'HDOS', 'HDOr', 'HDOs',
+                          'H218OV', 'H218OL', 'H218OI', 'H218OR', 'H218OS', 'H218Or', 'H218Os',
+	                  'LND_16V','LND_16L', 'LND_16I', 'LND_16R', 'LND_16S', 'LND_16r', 'LND_16s',
+	                  'NPAC_16V','NPAC_16L', 'NPAC_16I', 'NPAC_16R', 'NPAC_16S', 'NPAC_16r', 'NPAC_16s',
+	                  'LND_18V','LND_18L', 'LND_18I', 'LND_18R', 'LND_18S', 'LND_18r', 'LND_18s',
+	                  'NPAC_18V','NPAC_18L', 'NPAC_18I', 'NPAC_18R', 'NPAC_18S', 'NPAC_18r', 'NPAC_18s'
+wtrc_srfpcp_names          =  'H2OR', 'H2OS', 'H2Or', 'H2Os',
+                              'H216OR', 'H216OS', 'H216Or', 'H216Os',
+                              'HDOR', 'HDOS', 'HDOr', 'HDOs',
+                              'H218OR', 'H218OS', 'H218Or', 'H218Os',
+                              'LND_16R','LND_16S', 'LND_16r', 'LND_16s',
+                              'NPAC_16R','NPAC_16S', 'NPAC_16r', 'NPAC_16s',
+                              'LND_18R','LND_18S', 'LND_18r', 'LND_18s',
+                              'NPAC_18R','NPAC_18S', 'NPAC_18r', 'NPAC_18s'
+wtrc_species_names         = 'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O',
+                             'H216O', 'H216O', 'H216O', 'H216O', 'H216O', 'H216O', 'H216O',
+                             'HD16O', 'HD16O', 'HD16O', 'HD16O', 'HD16O', 'HD16O', 'HD16O',
+                             'H218O', 'H218O', 'H218O', 'H218O', 'H218O', 'H218O', 'H218O',
+	                     'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O',
+	                     'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O', 'H2O',
+	                     'H216O', 'H216O', 'H216O', 'H216O', 'H216O', 'H216O', 'H216O',
+	                     'H216O', 'H216O', 'H216O', 'H216O', 'H216O', 'H216O', 'H216O'
+wtrc_srfvap_names              = 'H2OV', 'H216OV', 'HDOV','H218OV',
+			         'LND_16V',
+			         'NPAC_16V',
+			         'LND_18V',
+			         'NPAC_18V'
+wtrc_type_names           =  'VAPOR', 'LIQUID', 'ICE', 'RAINS', 'SNOWS', 'RAINC', 'SNOWC',
+'VAPOR', 'LIQUID', 'ICE', 'RAINS', 'SNOWS', 'RAINC', 'SNOWC',
+'VAPOR', 'LIQUID', 'ICE', 'RAINS', 'SNOWS', 'RAINC', 'SNOWC',
+'VAPOR', 'LIQUID', 'ICE', 'RAINS', 'SNOWS', 'RAINC', 'SNOWC',
+'VAPOR', 'LIQUID', 'ICE', 'RAINS', 'SNOWS', 'RAINC', 'SNOWC',
+'VAPOR', 'LIQUID', 'ICE', 'RAINS', 'SNOWS', 'RAINC', 'SNOWC',
+'VAPOR', 'LIQUID', 'ICE', 'RAINS', 'SNOWS', 'RAINC', 'SNOWC',
+'VAPOR', 'LIQUID', 'ICE', 'RAINS', 'SNOWS', 'RAINC', 'SNOWC'

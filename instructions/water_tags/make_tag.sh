@@ -8,7 +8,7 @@
 tracking=( 0 1 0 1 ) #which iso (isph2o isph216o isphdo isph218o) to track, include = 1, dont include = 0
 ####################################
 #isotope tag for the output history file - inputs for make_namelist.sh to set up user_nl_cam
-export topetags=( _16 _D _18 ) #corresponding to the tagged water species
+export topetags=( _16 _18 ) #corresponding to the tagged water species
 ####################################
 #region tag from water tagging: for both make_tag.sh and make_namelist.sh
 export loctags=( LND NPAC )
