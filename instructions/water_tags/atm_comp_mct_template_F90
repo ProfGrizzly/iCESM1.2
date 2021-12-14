@@ -798,7 +798,6 @@ CONTAINS
 
           do j = 1, wtrc_nsrfvap
             select case(wtrc_species(wtrc_iasrfvap(j)))
-		! Author: Theodor Mayer & Ran Feng at UConn
 		! water tag goes here
             end select
           end do
