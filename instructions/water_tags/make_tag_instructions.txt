@@ -5,24 +5,40 @@ Steps for setting up a water tracer simulation in iCESM1.2:
     However, do not build the model until the water tracer additions below have
     also been added.
 
-2.  Next, set up the script make_tag.sh 
-	User defined input: location tags, lat&lon, output tracer tags for targed regions
-	non-user defined input: fortran code atm_comp_mct_template_F90 
-	Execution: ./make_tag.sh 
-	outputs: atm_comp_mct.F90, which incorporate a section of code to tag water species evaporated from different regions; user_nl_cam, which sets up the namelist for tagged water species
+2.  Next, set up the script "make_tag.sh" 
+    User defined input: 
+	"tracking": which isotopologues to track (isph2o isph216o isphdo isph218o), 1 to include, 0 to exclude
+	"topetags": tracer tags for "user_nl_cam" and history file, corresponding to included tracking
+	"loctags": regions tags for "user_nl_cam" and history file
+	"ifocn","iflnd","ifice": whether to tag evaporation from ocean, land or ice
+	"lat&lon": upper and lower bounds of latitude and longitude for each region in "loctags"
+		 must be integers, -90 to 90 for lat, 0 to 360 for lon
+     Non-user defined input: 
+     	"atm_comp_mct_template_F90" & "make_namelist.sh"
+     Execution: 
+        ./make_tag.sh 
+     Outputs: 
+        "atm_comp_mct.F90", which incorporate a section of code to tag water species evaporated from different regions 
+	"user_nl_cam", which sets up the namelist for tagged water species
+     ("make_namelist.sh" can be run individually to create only "user_nl_cam")
+     
+3.  Next, copy the generated "atm_comp_mct.F90" file into your SourceMods/src.cam directory.
+    This file is where the actual water tracer boundaries are specified, and will
+    thus need to be modified for any additional water tracers. These additions are
+    located in the "atm_import_mct" subroutine, in the "wtrc_nsrfvap" do-loop.
 
-3.  Then, add the line "-water_tag_num N" to the "CAM_CONFIG_OPTS" variable in your case's env_build.xml
-    file, where "N" is the number of water tracers you are using. You can find total number of water species M in atm_comp_mct.F90. N = M - 4 (the 4 species H2O, H216O, H218O and HDO are the default, not tagged species)
+4.  Then, add the line "-water_tag_num N" to the "CAM_CONFIG_OPTS" variable in your case's env_build.xml
+    file, where "N" is the number of water tracers you are using. You can find total number of water species M in "user_nl_cam" (e.g. number of "wtrc_srfvap_names" = M). N = M - 4 (the 4 species H2O, H216O, H218O and HDO are the default, not tagged species)
 
-4.  Finally, copy "user_nl_cam" file into your case directory and add other user-defined namelist settings if any.
+5.  Finally, copy "user_nl_cam" file into your case directory and add other user-defined namelist settings if any.
     In user_nl_cam, for every new water tracer that is added, location tags and tracer names are specified.
     An additional 7 "H2O" quantities are added to the "wtrc_species_names" variable, and an additional series of "VAPOR, LIQUID, ICE, etc." to the "wtrc_type_names" variable.
 
-5.  Build the model (run *.build script in case directory).
+6.  Build the model (run *.build script in case directory).
 
-6.  Run the model  (use either the *.run or *.submit script in case directory).
+7.  Run the model  (use either the *.run or *.submit script in case directory).
 
-7.  Once the model is finished running, you should find variables with the same names you provided in user_nl_cam
+8.  Once the model is finished running, you should find variables with the same names you provided in user_nl_cam
     in the history files that contain the associated water mass quantities for your water tracer.
 
 Good luck!
