@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-## Author: Theodor Mayer
+## Author: Theodor Mayer & Ran Feng
 ## To report bug, please contact theodorm@uconn.edu
 ## This script uses the location tags and isotope tages to set up namelist for water tagging function in CAM5
 ## It can be used as a standalone tool,
