@@ -1,37 +1,38 @@
 #!/usr/bin/env bash
-#author: Theodor Mayer
-#contact: 
+#author: Theodor Mayer & Ran Feng
+#contact: theodor.mayer@uconn.edu
+
 ################################################
 # user defined tagging regions and tracer species
 ###############################################
-tracking=( 0 1 1 1 ) #which iso (isph2o isph216o isphdo isph218o) to track, include = 1, dont include = 0
+tracking=( 0 1 0 1 ) #which iso (isph2o isph216o isphdo isph218o) to track, include = 1, dont include = 0
 ####################################
 #isotope tag for the output history file - inputs for make_namelist.sh to set up user_nl_cam
-export topetags=(_16 _D _18) #corresponding to the tagged water species
+export topetags=( _16 _D _18 ) #corresponding to the tagged water species
 ####################################
 #region tag from water tagging: for both make_tag.sh and make_namelist.sh
-export loctags=( LND OCN NP WEP EEP WNP ENP WSP ESP SO TIN EAM AM )
+export loctags=( LND NPAC )
 ####################################
 # whether to tag evaporation from ocean, land or ice
-ifocn=( 0 1 1 1 1 1 1 1 1 1 1 0 0 ) 
-iflnd=( 1 0 0 0 0 0 0 0 0 0 0 1 1 ) 
-ifice=( 0 0 0 0 0 0 0 0 0 0 0 0 0 )
+ifocn=( 0 1 ) 
+iflnd=( 1 0 ) 
+ifice=( 0 0 )
 ##################################### 
 ### latitude, longitude bound:needs to be integers
 ##       latupp 
 #  lonlow      lonupp
 ##      latlow
-latlow=( -90 -90   30 -10 -10 -10 10  -30 -30 -90 -10  10 -20) #lat lower bound 
-latupp=(  90  90   60  30  10  30 30  -10 -10 -30  30  30 -10)  #lat upper bound
-lonlow=(  0   0   120  90 150 150 210 150 210   0  40  70 110) #lon lower bound
-lonupp=(  360 360 250 150 275 210 275 210 275 360  90 130 160) #lon upper bound
+latlow=( -90  30 ) #lat lower bound 
+latupp=(  90  60 )  #lat upper bound
+lonlow=(  0   120 ) #lon lower bound
+lonupp=(  360 250 ) #lon upper bound
 #########
-#tag for the output history file - for make_namelist.sh
-export topetags=(_16 _D _18) #corresponding to the tagged water species
 ## the naming convention for the output variables is {loctags}{topetags}
+
 #############################
-#internal definitions of the code : no need to change, unless the code base is changed
+#INTERNAL DEFINITIONS OF THE CODE : NO NEED TO CHANGE, UNLESS THE CODE BASE IS CHANGED
 #############################
+
 ###case name of different water species
 casename=( isph2o isph216o isphdo isph218o )
 #############################
@@ -71,7 +72,8 @@ echo "
 echo "	        else " 														>> tag_section.temp
 		for j in ${!loctags[@]}; do
 echo " 		     if(j .eq. ${jind}) then "											>> tag_section.temp
-echo "  	             if(((wtlat > ${latlow[j]}._r8) .and. (wtlat < ${latupp[j]}._r8)) .and. ((wtlon > ${lonlow[j]}._r8) .and. (wtlon <= ${lonupp[j]}._r8))) then " >> tag_section.temp
+echo "  	             !${loctags[j]}:
+                             if(((wtlat > ${latlow[j]}._r8) .and. (wtlat < ${latupp[j]}._r8)) .and. ((wtlon > ${lonlow[j]}._r8) .and. (wtlon <= ${lonupp[j]}._r8))) then " >> tag_section.temp
 		if [[ ${ifocn[j]} == 1 ]]; then
 echo "		     			cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = (1._r8-cam_in(c)%landfrac(i))*-x2a_a%rAttr(index_x2a_Faxx_evap${evaptags[i]},ig) " >> tag_section.temp
 		elif [[ ${ifice[j]} == 1 ]]; then
