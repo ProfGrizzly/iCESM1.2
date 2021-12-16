@@ -21,6 +21,12 @@ if [[ ! -f user_nl_cam ]] ; then
 	touch user_nl_cam
 fi
 ###################################
+cat << EOF >> user_nl_cam
+! Users should add all user specific namelist changes below in the form of  
+! namelist_var = new_namelist_value 
+
+EOF
+###################################
 cat << EOF >> user_nl_cam 
 wtrc_names             = 'H2OV', 'H2OL', 'H2OI', 'H2OR', 'H2OS', 'H2Or', 'H2Os',
                           'H216OV', 'H216OL', 'H216OI','H216OR','H216OS','H216Or', 'H216Os',
