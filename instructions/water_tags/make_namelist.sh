@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-## Author: Theodor Mayer & Ran Feng
+## Author: Theodor Mayer
 ## To report bug, please contact theodorm@uconn.edu
 ## This script uses the location tags and isotope tages to set up namelist for water tagging function in CAM5
 ## It can be used as a standalone tool,
@@ -7,12 +7,13 @@
 ###### for standalone execution
 #loctags=( LND OCN NP WEP EEP WNP ENP WSP ESP SO TIN EAM AM )
 #topetags=(_W _16 _D _18) # water, h216O, hDO or h218O (corresponding to the tagged species)
+#species=(H2O H216O HD16O H218O)
 #############################
 #set up wtrc_names, > overwrite, >> add
 echo "making namelist file for tagged regions and water species"
 echo ${loctags[*]} 
 echo ${topetags[*]}
-species=(H2O H216O HD16O H218O)
+echo ${species[*]}
 wtrc_tails=(V L I R S r s)
 pcp_tails=(R S r s)
 

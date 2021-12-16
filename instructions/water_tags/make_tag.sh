@@ -1,38 +1,36 @@
 #!/usr/bin/env bash
 #author: Theodor Mayer & Ran Feng
 #contact: theodor.mayer@uconn.edu
-
 ################################################
 # user defined tagging regions and tracer species
 ###############################################
-tracking=( 0 1 0 1 ) #which iso (isph2o isph216o isphdo isph218o) to track, include = 1, dont include = 0
+tracking=( 1 0 1 1 ) #which iso (isph2o isph216o isphdo isph218o) to track, include = 1, dont include = 0
 ####################################
 #isotope tag for the output history file - inputs for make_namelist.sh to set up user_nl_cam
-export topetags=( _16 _18 ) #corresponding to the tagged water species
+## the naming convention for the output variables is {loctags}{topetags}
+export topetags=( _W _D _18 ) #corresponding to the tagged water species
 ####################################
 #region tag from water tagging: for both make_tag.sh and make_namelist.sh
-export loctags=( LND NPAC )
+export loctags=( NPAC )
 ####################################
+# for the namelist, cannot be H2O, H216O, HD16O or H218O
+export species=( H2O HD16O H218O )
 # whether to tag evaporation from ocean, land or ice
-ifocn=( 0 1 ) 
-iflnd=( 1 0 ) 
-ifice=( 0 0 )
+ifocn=( 1 )
+iflnd=( 0 )
+ifice=( 0 )
 ##################################### 
 ### latitude, longitude bound:needs to be integers
 ##       latupp 
 #  lonlow      lonupp
 ##      latlow
-latlow=( -90  30 ) #lat lower bound 
-latupp=(  90  60 )  #lat upper bound
-lonlow=(  0   120 ) #lon lower bound
-lonupp=(  360 250 ) #lon upper bound
-#########
-## the naming convention for the output variables is {loctags}{topetags}
-
+latlow=( 30 ) #lat lower bound 
+latupp=( 60 )  #lat upper bound
+lonlow=( 120 ) #lon lower bound
+lonupp=( 250 ) #lon upper bound
 #############################
-#INTERNAL DEFINITIONS OF THE CODE : NO NEED TO CHANGE, UNLESS THE CODE BASE IS CHANGED
+#internal definitions of the code : no need to change, unless the code base is changed
 #############################
-
 ###case name of different water species
 casename=( isph2o isph216o isphdo isph218o )
 #############################
@@ -69,24 +67,24 @@ echo "
                      R = wtrc_ratio(wtrc_species(wtrc_iasrfvap(j)),cam_out(c)%qbot(i,wtrc_indices(wtrc_iasrfvap(j))),&
                                     cam_out(c)%qbot(i,wtrc_indices(wtrc_iasrfvap(1))))
                       cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = R*-x2a_a%rAttr(index_x2a_Faxx_evap${evaptags[i]},ig) " >> tag_section.temp
-echo "	        else " 														>> tag_section.temp
+echo "             else "       													>> tag_section.temp
 		for j in ${!loctags[@]}; do
-echo " 		     if(j .eq. ${jind}) then "											>> tag_section.temp
-echo "  	             !${loctags[j]}:
-                             if(((wtlat > ${latlow[j]}._r8) .and. (wtlat < ${latupp[j]}._r8)) .and. ((wtlon > ${lonlow[j]}._r8) .and. (wtlon <= ${lonupp[j]}._r8))) then " >> tag_section.temp
-		if [[ ${ifocn[j]} == 1 ]]; then
-echo "		     			cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = (1._r8-cam_in(c)%landfrac(i))*-x2a_a%rAttr(index_x2a_Faxx_evap${evaptags[i]},ig) " >> tag_section.temp
+echo "                  if(j .eq. ${jind}) then "											>> tag_section.temp
+echo "                    !${loctags[j]}${evaptags[i]}:
+                           if(((wtlat > ${latlow[j]}._r8) .and. (wtlat < ${latupp[j]}._r8)) .and. ((wtlon > ${lonlow[j]}._r8) .and. (wtlon <= ${lonupp[j]}._r8))) then " >> tag_section.temp
+                if [[ ${ifocn[j]} == 1 ]]; then
+echo "                             cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = (1._r8-cam_in(c)%landfrac(i))*-x2a_a%rAttr(index_x2a_Faxx_evap${evaptags[i]},ig) " >> tag_section.temp
 		elif [[ ${ifice[j]} == 1 ]]; then
-echo "     				cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = (1._r8-cam_in(c)%landfrac(i)-cam_in(c)%ocnfrac(i))*-x2a_a%rAttr(index_x2a_Faxx_evap${evaptags[i]},ig) " >> tag_section.temp
+echo "                             cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = (1._r8-cam_in(c)%landfrac(i)-cam_in(c)%ocnfrac(i))*-x2a_a%rAttr(index_x2a_Faxx_evap${evaptags[i]},ig) " >> tag_section.temp
 		elif [[ ${iflnd[j]} == 1 ]]; then
-echo "     				cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = cam_in(c)%landfrac(i)*-x2a_a%rAttr(index_x2a_Faxx_evap${evaptags[i]},ig) " >> tag_section.temp
+echo "                             cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = cam_in(c)%landfrac(i)*-x2a_a%rAttr(index_x2a_Faxx_evap${evaptags[i]},ig) " >> tag_section.temp
 		else	
-echo "     				cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = -x2a_a%rAttr(index_x2a_Faxx_evap${evaptags[i]},ig) " >> tag_section.temp
+echo "                             cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = -x2a_a%rAttr(index_x2a_Faxx_evap${evaptags[i]},ig) " >> tag_section.temp
 		fi
-echo "   	              else
-					cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = 0._r8
-		              end if 
-		     end if " >> tag_section.temp
+echo "                    else
+                              cam_in(c)%cflx(i,wtrc_indices(wtrc_iasrfvap(j))) = 0._r8
+                          end if 
+                 end if " >> tag_section.temp
 ###############only add the last part to the end of the if statements within the loop
                 if [[ $(($j+1)) == ${#loctags[@]} ]]; then
 echo "
