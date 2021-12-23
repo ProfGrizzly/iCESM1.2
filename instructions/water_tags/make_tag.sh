@@ -4,30 +4,30 @@
 ################################################
 # user defined tagging regions and tracer species
 ###############################################
-tracking=( 1 0 1 1 ) #which iso (isph2o isph216o isphdo isph218o) to track, include = 1, dont include = 0
+tracking=( 0 1 1 1 ) #which iso (isph2o isph216o isphdo isph218o) to track, include = 1, dont include = 0
 ####################################
 #isotope tag for the output history file - inputs for make_namelist.sh to set up user_nl_cam
 ## the naming convention for the output variables is {loctags}{topetags}
-export topetags=( _W _D _18 ) #corresponding to the tagged water species
+export topetags=( _16 _D _18 ) #corresponding to the tagged water species
 ####################################
 #region tag from water tagging: for both make_tag.sh and make_namelist.sh
-export loctags=( NPAC )
+export loctags=( LND NPAC )
 ####################################
 # for the namelist, cannot be H2O, H216O, HD16O or H218O
-export species=( H2O HD16O H218O )
+export species=( H216O HD16O H218O )
 # whether to tag evaporation from ocean, land or ice
-ifocn=( 1 )
-iflnd=( 0 )
-ifice=( 0 )
+ifocn=( 0 1 )
+iflnd=( 1 0 )
+ifice=( 0 0 )
 ##################################### 
 ### latitude, longitude bound:needs to be integers
 ##       latupp 
 #  lonlow      lonupp
 ##      latlow
-latlow=( 30 ) #lat lower bound 
-latupp=( 60 )  #lat upper bound
-lonlow=( 120 ) #lon lower bound
-lonupp=( 250 ) #lon upper bound
+latlow=( -90 30 ) #lat lower bound 
+latupp=( 90  60 )  #lat upper bound
+lonlow=( 0   120 ) #lon lower bound
+lonupp=( 360 250 ) #lon upper bound
 #############################
 #internal definitions of the code : no need to change, unless the code base is changed
 #############################
